@@ -11,7 +11,7 @@ Some scripts by SNMP.
 
 `APMonitor_AppManager`
 1. 2019/8/28: v19.82801; add version number and print it in log file.
-
+2. 2019/11/22: v19.112201; help Liu Liang added a output table of HillstoneIpsec
 ## oids.properties
 
 Conf file for such scirpts.
@@ -41,11 +41,18 @@ __Usage__
 
 `java -cp .;bin;lib\* APMonitor_AppManager <IP or host name> <snmp community> v2c <verdor:cisco|huawei|h3c|ruijie>`
 
+## APMonitor_DelliDRAC.java
+
+A script to monitor Dell iDRAC. For Applications Manager
+
+__Usage__
+
+`java -cp .;bin;lib\* APMonitor_DelliDRAC <IP or host name> <snmp community> v2c
+
+
 ## IpmiSnmpTest.java
 
-[Other languages and more information](https://github.com/snowyxx/MyTest/tree/master/ipmi)
-
-A script to get Impi data for Applications Manager
+A script to get Impi data for Applications Manager - For IBM IMM
 
 __Monitored data__
 

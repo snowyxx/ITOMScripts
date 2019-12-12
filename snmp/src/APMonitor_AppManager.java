@@ -23,7 +23,7 @@ import com.adventnet.snmp.snmp2.SnmpOID;
 import com.adventnet.utils.LogManager;
 
 public class APMonitor_AppManager {
-	static String VER = "19.82801";
+	static String VER = "19.112201";
 	SnmpTarget target = new SnmpTarget();
 	Logger logger = Logger.getLogger("APMonitor_AppManager");
 	Properties prop = new Properties();
@@ -178,7 +178,7 @@ public class APMonitor_AppManager {
 				result = (result != null) ? result : "NA";
 				if("AcType".equals(name)) {
 					String typeNames[] = {"UNKOWN", "ws5302", "ws5708" , "m8600ws" , "ws3302" , "m12000ws", "ws5504", "ws6108", "ws6816", "m18000-WS-ED" , "m8600E-WS-ED", "eg2000" , "ws6008", "ws6812", "aw608", "ws6024", "eg350"};
-					int result_N = Integer.getInteger(result);
+					int result_N = Integer.parseInt(result);
 					if(result_N <= typeNames.length ) {
 						result = typeNames[result_N];
 					}
@@ -190,6 +190,19 @@ public class APMonitor_AppManager {
 			cols.put("ifOperStatus", ".1.3.6.1.2.1.2.2.1.8");
 			cols.put("ifMtu", ".1.3.6.1.2.1.2.2.1.4");
 			getAndPrintSelectedCol("ifTable", cols);
+		}else if ("HillstoneIpsec".equalsIgnoreCase(vendor)) {
+			cols.put("TunnelID", ".1.3.6.1.4.1.28557.2.1.1.1.1.3");
+			cols.put("TunnelName", ".1.3.6.1.4.1.28557.2.1.1.1.1.2");
+			cols.put("TunnelType", ".1.3.6.1.4.1.28557.2.1.1.1.1.4");
+			cols.put("TunnelPeerIp", ".1.3.6.1.4.1.28557.2.1.1.1.1.5");
+			cols.put("TunnelExIfIndex", ".1.3.6.1.4.1.28557.2.1.1.1.1.6");
+			cols.put("TunnelLocalID", ".1.3.6.1.4.1.28557.2.1.1.1.1.7");
+			cols.put("TunnelRemoteID", ".1.3.6.1.4.1.28557.2.1.1.1.1.8");
+			cols.put("TunnelCryptAlgorithms", ".1.3.6.1.4.1.28557.2.1.1.1.1.9");
+			cols.put("TunnelAuthAlgorithms", ".1.3.6.1.4.1.28557.2.1.1.1.1.10");
+			cols.put("TunnelLifeTime", ".1.3.6.1.4.1.28557.2.1.1.1.1.11");
+			cols.put("TunnelStatus", ".1.3.6.1.4.1.28557.2.1.1.1.1.12");
+			getAndPrintSelectedCol("HillstoneIpsec", cols);
 		}
 
 //		HashMap<String, String> tables = new HashMap<String, String>();
@@ -256,6 +269,15 @@ public class APMonitor_AppManager {
 			logger.info("going to snmpget column: " + name + " : " + oid);
 			ArrayList result = null;
 			result = getByColumn(oid);
+			if("HillstoneIpsec".equals(tableName) && "TunnelStatus".equalsIgnoreCase(name)) {
+				for (int i=0; i< result.size(); i++) {
+					String typeNames[] = {"UNKOWN", "active", "inactive"};
+					int result_N = Integer.parseInt((String)result.get(i));
+					if(result_N <= typeNames.length ) {
+						result.set(i, typeNames[result_N]);
+					}
+				}
+			}
 			colList.add(result);
 			if (result.size() == 0) {
 				System.out.println("!!!! Can not got AP table oid response");
@@ -329,7 +351,7 @@ public class APMonitor_AppManager {
 		client.target.setTargetHost(host);
 		client.target.setTargetPort(161);
 		client.target.setCommunity(community);
-		client.target.setSnmpVersion(0);
+		client.target.setSnmpVersion(ver);
 		client.logger.info("------------ host: " + host + " ----------");
 //		String mibs = client.prop.getProperty("mibs");
 //		if (mibs != null) {
